@@ -5,6 +5,7 @@ on:
 
 jobs:
   keep-scheduled-workflow-activity:
+    name: Keep scheduled task alive
     uses: WaterLemons2k/scheduled-workflow-activity-action/.github/workflows/reusable.yml@v2
 
   scheduled:
