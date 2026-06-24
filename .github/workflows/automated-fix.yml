@@ -5,7 +5,7 @@ on:
     inputs:
       script:
         description: The script to fix code
-        default: |
+        default: |-
           yarn
           yarn fix || true
         type: string

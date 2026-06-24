@@ -9,7 +9,7 @@ on:
         type: string
       script:
         description: The script to update
-        default: |
+        default: |-
           yarn
           yarn update
         type: string
@@ -27,6 +27,7 @@ jobs:
     name: ${{ inputs.name }}
     runs-on: ubuntu-latest
     env:
+      GET_COMMIT_MESSAGE: ${{ inputs.message }}
       YARN_ENABLE_IMMUTABLE_INSTALLS: false
       #  RUNNER_DEBUG: "1"
     steps:
@@ -41,9 +42,8 @@ jobs:
 
       - name: Prepare env
         run: |
-          COMMIT_MESSAGE=$(${{ inputs.message }})
           echo "CURRENT_DATE=$(date +'%Y-%m-%d')" >> "$GITHUB_ENV"
-          echo "COMMIT_MESSAGE=$COMMIT_MESSAGE" >> "$GITHUB_ENV"
+          echo "COMMIT_MESSAGE=$($GET_COMMIT_MESSAGE)" >> "$GITHUB_ENV"
           cat "$GITHUB_ENV"
 
       - uses: peter-evans/create-pull-request@v8
