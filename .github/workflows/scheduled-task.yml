@@ -42,6 +42,8 @@ jobs:
         run: |-
           node --eval "fs.writeFileSync('__update.sh', process.env.UPDATE_SCRIPT, {mode: 0o777})"
           node --eval "fs.writeFileSync('__get-commit-message.sh', process.env.GET_COMMIT_MESSAGE_SCRIPT, {mode: 0o777})"
+          cat __update.sh
+          cat __get-commit-message.sh
 
       - name: Run update script
         run: bash __update.sh
