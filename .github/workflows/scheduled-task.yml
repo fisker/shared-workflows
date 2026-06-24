@@ -27,7 +27,8 @@ jobs:
     name: ${{ inputs.name }}
     runs-on: ubuntu-latest
     env:
-      GET_COMMIT_MESSAGE: ${{ inputs.message }}
+      UPDATE_SCRIPT: ${{ inputs.script }}
+      GET_COMMIT_MESSAGE_SCRIPT: ${{ inputs.message }}
       YARN_ENABLE_IMMUTABLE_INSTALLS: false
       #  RUNNER_DEBUG: "1"
     steps:
@@ -37,20 +38,23 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
 
-      - name: Run update script
-        run: ${{ inputs.script }}
+      - name: Generate scripts
+        run: |-
+          node --eval "fs.writeFileSync('__update.sh', process.env.UPDATE_SCRIPT, {mode: 0o777})"
+          node --eval "fs.writeFileSync('__get-commit-message.sh', process.env.GET_COMMIT_MESSAGE_SCRIPT, {mode: 0o777})"
 
-      - name: Prepare env
-        run: |
-          cat << 'EOF' > __get-commit-message.sh
-          $GET_COMMIT_MESSAGE
-          EOF
-          cat __get-commit-message.sh
-          chmod +x __get-commit-message.sh
+      - name: Run update script
+        run: bash __update.sh
+
+      - name: Prepare
+        run: |-
           echo "CURRENT_DATE=$(date +'%Y-%m-%d')" >> "$GITHUB_ENV"
           echo "COMMIT_MESSAGE=$(bash __get-commit-message.sh)" >> "$GITHUB_ENV"
-          rm __get-commit-message.sh
           cat "$GITHUB_ENV"
+
+      - name: Clean
+        run: |-
+          rm __update.sh __get-commit-message.sh
 
       - uses: peter-evans/create-pull-request@v8
         with:
