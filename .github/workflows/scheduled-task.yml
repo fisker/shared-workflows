@@ -46,7 +46,9 @@ jobs:
           cat __get-commit-message.sh
 
       - name: Run update script
-        run: bash __update.sh
+        run: |-
+          cat __update.sh
+          ./__update.sh
 
       - name: Prepare
         run: |-
