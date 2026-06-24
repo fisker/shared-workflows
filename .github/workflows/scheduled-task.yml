@@ -41,6 +41,7 @@ jobs:
           ${{ inputs.script }}
           echo "CURRENT_DATE=$(date +'%Y-%m-%d')" >> "$GITHUB_ENV"
           echo "COMMIT_MESSAGE=$(${{ inputs.message }})" >> "$GITHUB_ENV"
+          cat "$GITHUB_ENV"
 
       - uses: peter-evans/create-pull-request@v8
         with:
