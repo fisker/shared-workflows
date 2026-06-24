@@ -4,10 +4,15 @@ on:
   workflow_call:
     inputs:
       script:
-        description: The script to fix code
+        description: The script to update
         default: |
           yarn
           yarn update
+        type: string
+      title:
+        description: The script to get pull request title
+        default: |
+          echo "Update ($(date +'%Y-%m-%d'))"
         type: string
 
 jobs:
@@ -29,11 +34,14 @@ jobs:
         uses: actions/setup-node@v6
 
       - name: Run update script
-        run: ${{ inputs.script }}
+        run: |
+          ${{ inputs.script }}
+          echo "CURRENT_DATE=$(date +'%Y-%m-%d')" >> "$GITHUB_ENV"
+          echo "PULL_REQUEST_TITLE=$(${{ inputs.title }})" >> "$GITHUB_ENV"
 
       - uses: peter-evans/create-pull-request@v8
         with:
-          commit-message: Update
-          branch: automated-update
+          commit-message: ${{ env.PULL_REQUEST_TITLE }}
+          title: ${{ env.PULL_REQUEST_TITLE }}
+          branch: automated-update-${{ env.CURRENT_DATE }}
           branch-suffix: timestamp
-          title: Update
