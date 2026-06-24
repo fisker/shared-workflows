@@ -43,7 +43,7 @@ jobs:
       - name: Prepare env
         run: |
           cat << 'EOF' > __get-commit-message.sh
-          $MY_INPUT_DATA
+          $GET_COMMIT_MESSAGE
           EOF
           cat __get-commit-message.sh
           chmod +x __get-commit-message.sh
