@@ -45,6 +45,7 @@ jobs:
           cat << 'EOF' > __get-commit-message.sh
           $MY_INPUT_DATA
           EOF
+          cat __get-commit-message.sh
           chmod +x __get-commit-message.sh
           echo "CURRENT_DATE=$(date +'%Y-%m-%d')" >> "$GITHUB_ENV"
           echo "COMMIT_MESSAGE=$(bash __get-commit-message.sh)" >> "$GITHUB_ENV"
