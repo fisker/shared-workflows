@@ -3,16 +3,19 @@ name: Run scheduled task
 on:
   workflow_call:
     inputs:
+      name:
+        description: The scheduled task name
+        default: Run scheduled task
+        type: string
       script:
         description: The script to update
         default: |
           yarn
           yarn update
         type: string
-      title:
-        description: The script to get pull request title
-        default: |
-          echo "Update ($(date +'%Y-%m-%d'))"
+      message:
+        description: The script to get commit message
+        default: echo "Update ($(date +'%Y-%m-%d'))"
         type: string
 
 jobs:
@@ -21,7 +24,7 @@ jobs:
     uses: WaterLemons2k/scheduled-workflow-activity-action/.github/workflows/reusable.yml@v2
 
   scheduled:
-    name: Run scheduled task
+    name: ${{ inputs.name }}
     runs-on: ubuntu-latest
     env:
       YARN_ENABLE_IMMUTABLE_INSTALLS: false
@@ -37,11 +40,11 @@ jobs:
         run: |
           ${{ inputs.script }}
           echo "CURRENT_DATE=$(date +'%Y-%m-%d')" >> "$GITHUB_ENV"
-          echo "PULL_REQUEST_TITLE=$(${{ inputs.title }})" >> "$GITHUB_ENV"
+          echo "COMMIT_MESSAGE=$(${{ inputs.message }})" >> "$GITHUB_ENV"
 
       - uses: peter-evans/create-pull-request@v8
         with:
-          commit-message: ${{ env.PULL_REQUEST_TITLE }}
-          title: ${{ env.PULL_REQUEST_TITLE }}
+          title: ${{ env.COMMIT_MESSAGE }}
+          commit-message: ${{ env.COMMIT_MESSAGE }}
           branch: automated-update-${{ env.CURRENT_DATE }}
           branch-suffix: timestamp
