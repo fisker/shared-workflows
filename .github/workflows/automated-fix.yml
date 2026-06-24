@@ -2,6 +2,13 @@ name: Run automated fix
 
 on:
   workflow_call:
+    inputs:
+      script:
+        description: The script to fix code
+        default: |
+          yarn
+          yarn fix
+        type: string
 
 jobs:
   fix:
@@ -17,11 +24,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
 
-      - name: Install Dependencies
-        run: yarn
-
       - name: Run fix script
-        run: yarn fix || true
+        run: ${{ inputs.script }} || true
 
       - name: Apply automated fix
         uses: autofix-ci/action@v1
