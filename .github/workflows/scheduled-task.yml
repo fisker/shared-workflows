@@ -37,10 +37,13 @@ jobs:
         uses: actions/setup-node@v6
 
       - name: Run update script
+        run: ${{ inputs.script }}
+
+      - name: Prepare env
         run: |
-          ${{ inputs.script }}
+          COMMIT_MESSAGE=$(${{ inputs.message }})
           echo "CURRENT_DATE=$(date +'%Y-%m-%d')" >> "$GITHUB_ENV"
-          echo "COMMIT_MESSAGE=$(${{ inputs.message }})" >> "$GITHUB_ENV"
+          echo "COMMIT_MESSAGE=$COMMIT_MESSAGE" >> "$GITHUB_ENV"
           cat "$GITHUB_ENV"
 
       - uses: peter-evans/create-pull-request@v8
