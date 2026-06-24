@@ -7,7 +7,7 @@ on:
         description: The script to fix code
         default: |
           yarn
-          yarn fix
+          yarn fix || true
         type: string
 
 jobs:
@@ -25,7 +25,7 @@ jobs:
         uses: actions/setup-node@v6
 
       - name: Run fix script
-        run: ${{ inputs.script }} || true
+        run: ${{ inputs.script }}
 
       - name: Apply automated fix
         uses: autofix-ci/action@v1
