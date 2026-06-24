@@ -2,6 +2,13 @@ name: Run scheduled task
 
 on:
   workflow_call:
+    inputs:
+      script:
+        description: The script to fix code
+        default: |
+          yarn
+          yarn update
+        type: string
 
 jobs:
   keep-scheduled-workflow-activity:
@@ -21,11 +28,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
 
-      - name: Install Dependencies
-        run: yarn
-
-      - name: Run script
-        run: yarn update
+      - name: Run update script
+        run: ${{ inputs.script }}
 
       - uses: peter-evans/create-pull-request@v8
         with:
