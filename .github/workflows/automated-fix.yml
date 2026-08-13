@@ -6,7 +6,7 @@ on:
       script:
         description: The script to fix code
         default: |-
-          yarn
+          yarn --no-immutable
           yarn fix || true
         type: string
 
@@ -16,13 +16,13 @@ jobs:
     runs-on: ubuntu-latest
     env:
       YARN_ENABLE_IMMUTABLE_INSTALLS: false
-      #  RUNNER_DEBUG: "1"
+      # RUNNER_DEBUG: "1"
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
 
       - name: Setup Node.js
-        uses: actions/setup-node@v6
+        uses: actions/setup-node@v7
 
       - name: Run fix script
         run: ${{ inputs.script }}
